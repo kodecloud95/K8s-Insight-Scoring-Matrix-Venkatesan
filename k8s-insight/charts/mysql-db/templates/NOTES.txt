@@ -1,0 +1,47 @@
+1. ConfigMap (mysql-configmap)
+Stores non-sensitive configuration and initialization logic.
+
+MYSQL_DATABASE: Sets the name of the database to be created on startup (e.g., quiz_results).
+
+MYSQL_HOST: The internal FQDN (Fully Qualified Domain Name) for the database.
+
+Note: Using the long format (mysql-service.namespace.svc.cluster.local) is a best practice for cross-namespace communication.
+
+init.sql: This is a Script-as-Configuration. You’ve embedded the table schema directly in the YAML. When this ConfigMap is mounted to the pod, the script will execute automatically (see Volume section).
+
+2. Secret (mysql-secret)
+Stores sensitive credentials.
+
+Type: Opaque: The default secret type for general-purpose sensitive data.
+
+Base64 Encoding: All values must be Base64 encoded.
+
+Example command to generate: echo -n 'mypassword' | base64
+
+Data Security: While these are encoded, they are not encrypted by default in Kubernetes. In a production setting, you would use a tool like Helm Secrets (SOPS) or HashiCorp Vault.
+
+3. Service (mysql-service)
+Provides a stable entry point for the backend to find the database.
+
+Static clusterIP: You have manually assigned 10.103.73.51.
+
+⚠️ Note: Hardcoding a ClusterIP is generally not recommended unless you have a specific networking requirement. It is better to let Kubernetes assign one dynamically and use the Service Name (mysql-service) for discovery.
+
+Port 3306: The standard port for MySQL traffic.
+
+4. Deployment (mysql-db)
+The core container configuration.
+
+Environment Variables: The container pulls values from both the ConfigMap (DB name) and the Secret (User/Passwords). This follows the 12-Factor App methodology for configuration.
+
+Initialization Hook (/docker-entrypoint-initdb.d):
+
+The official MySQL image is programmed to look into this specific folder upon startup.
+
+If the folder contains a .sql file and the database is empty, it runs that script automatically.
+
+Volumes & Mounts:
+
+Volume: References the mysql-configmap.
+
+Mount: Maps the init.sql key from the ConfigMap into the pod at /docker-entrypoint-initdb.d/init.sql.

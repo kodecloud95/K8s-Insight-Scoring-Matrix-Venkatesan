@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-backend
+  namespace: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-deployment 
+  ports:
+    - name: backend
+      port: 3000
+      targetPort: 3000

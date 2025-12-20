@@ -1,0 +1,40 @@
+1. Service Configuration (ClusterIP)
+The Service acts as the Internal Load Balancer for your backend pods.
+
+Type: ClusterIP: This is the default service type. It exposes the backend on a cluster-internal IP. It is not accessible from the outside world directly (only via Ingress or from the Frontend pod).
+
+Port Mapping:
+
+port: 3000: The port other pods (like your frontend) will use to talk to the backend.
+
+targetPort: 3000: The actual port the application inside the container is listening on.
+
+Selector: Must match the labels in the Deployment (app: backend-deployment) to route traffic correctly.
+
+2. Deployment Configuration
+The Deployment manages the Lifecycle of your backend application.
+
+Replicas: Set to 1. In a production scenario, you would increase this to 2 or 3 for high availability.
+
+Image: Uses docker.io/kodecloud95/k8s-insight-backend.
+
+ImagePullPolicy: Always: This ensures that every time a pod restarts, Kubernetes checks the registry for the latest version of the image.
+
+3. Environment Variable Management (Secret vs. ConfigMap)
+This is a critical security best practice demonstrated in your code. You are decoupling configuration from the application code.
+
+A. ConfigMaps (Non-Sensitive Data)
+Used for configuration that isn't a secret.
+
+MYSQL_DATABASE: The name of the DB schema.
+
+MYSQL_HOST: The DNS name of your MySQL service (e.g., mysql-service).
+
+B. Secrets (Sensitive Data)
+Used for credentials that should be encrypted at rest.
+
+MYSQL_USER: Database username.
+
+MYSQL_PASSWORD: Database password.
+
+MYSQL_ROOT_PASSWORD: Admin password for the MySQL instance.

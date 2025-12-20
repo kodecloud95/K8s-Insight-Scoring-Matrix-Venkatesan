@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-configmap
+  namespace: {{ .Release.Name }}
+data:
+  MYSQL_DATABASE: quiz_results
+  MYSQL_HOST: mysql-service.{{ .Release.Name }}.svc.cluster.local
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS leaderboard (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255),
+      company VARCHAR(255),
+      email VARCHAR(255),
+      score VARCHAR(50),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
