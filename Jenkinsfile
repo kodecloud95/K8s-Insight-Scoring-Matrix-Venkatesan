@@ -64,7 +64,9 @@ pipeline{
         }
         stage ('Deploy to Kubernetes'){
             steps {
+                withCredentials([file(credentialsId: 'K8S_CONFIG', variable: 'KUBECONFIG_PATH')]) {
                 script {
+                    def kubeconfig = ${KUBECONFIG_PATH}
                     sh """
                         # Add your kubectl deployment commands here
                         echo "Deploying to ${params.ENV} environment"
@@ -73,6 +75,7 @@ pipeline{
                             --set backend.image=${GIT_REGISTRY}/${BACKEND_IMAGE_NAME}:${env.BUILD_NUMBER} \\
                             --namespace k8s-insight-${params.ENV} --create-namespace
                     """
+                }
                 }
             }
         }
