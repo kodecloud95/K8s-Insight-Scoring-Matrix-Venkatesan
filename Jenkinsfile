@@ -77,7 +77,7 @@ pipeline{
                     sh """
                         # Add your kubectl deployment commands here
                         echo "Deploying to ${params.ENV} environment"
-                        helm upgrade --install k8s-insight-${params.ENV} ./k8s-insight-chart \\
+                        helm upgrade --install k8s-insight-${params.ENV} ./k8s-insight \\
                             --set frontend.image=${GIT_REGISTRY}/${FRONTEND_IMAGE_NAME}:${FRONT_TAG} \\
                             --set backend.image=${GIT_REGISTRY}/${BACKEND_IMAGE_NAME}:${BACK_TAG} 
                     """
