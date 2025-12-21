@@ -6,7 +6,6 @@ pipeline{
         string(name: 'BACKEND_IMAGE_TAG', defaultValue: 'latest', description: 'Backend Docker image tag')
     }
     environment {
-        REGISTRY_CREDENTIALS = credentials('GIT_PACKAGE')
         GIT_REGISTRY = 'ghcr.io/kodecloud95'
         FRONTEND_IMAGE_NAME = 'k8s-insight-frontend-${params.ENV}'
         BACKEND_IMAGE_NAME = 'k8s-insight-backend-${params.ENV}'
@@ -29,7 +28,10 @@ pipeline{
             when {
                 expression { (params.FRONTEND_IMAGE_TAG.trim()) == 'latest' }
                 }             
-            steps {             
+            steps { 
+                withCredentials([usernamePassword(credentialsId: 'GIT_PACKAGE', 
+                                usernameVariable: 'REGISTRY_CREDENTIALS_USR', 
+                                passwordVariable: 'REGISTRY_CREDENTIALS_PSW')]) {            
                 script {
                     def frontendImage = "${GIT_REGISTRY}/${FRONTEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
                     sh """
@@ -39,6 +41,7 @@ pipeline{
                     """
                     
                 }
+                }  
             }
         }
         stage ('Build and Push Backend Image') {
@@ -46,6 +49,9 @@ pipeline{
                 expression { (params.BACKEND_IMAGE_TAG.trim()) == 'latest' }
                 }
             steps {
+                withCredentials([usernamePassword(credentialsId: 'GIT_PACKAGE', 
+                                usernameVariable: 'REGISTRY_CREDENTIALS_USR', 
+                                passwordVariable: 'REGISTRY_CREDENTIALS_PSW')]) {
                 script {
                     def backendImage = "${GIT_REGISTRY}/${BACKEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
                     sh """
@@ -54,6 +60,7 @@ pipeline{
                         docker push ${backendImage}
                     """
                 }
+            }
             }
         }
     }
