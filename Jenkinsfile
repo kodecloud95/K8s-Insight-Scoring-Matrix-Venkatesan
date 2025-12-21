@@ -73,15 +73,14 @@ pipeline{
                     def BACK_TAG = "${env.BUILD_NUMBER}"
                     if (params.BACKEND_IMAGE_TAG.trim() !=  'latest') {
                         BACK_TAG = params.BACKEND_IMAGE_TAG.trim()
-                    }                    
-                    def KUBECONFIG = "${KUBECONFIG_PATH}"
+                    }                
                     sh """
+                        export KUBECONFIG = "${KUBECONFIG_PATH}"
                         # Add your kubectl deployment commands here
                         echo "Deploying to ${params.ENV} environment"
                         helm upgrade --install k8s-insight-${params.ENV} ./k8s-insight-chart \\
                             --set frontend.image=${GIT_REGISTRY}/${FRONTEND_IMAGE_NAME}:${FRONT_TAG} \\
-                            --set backend.image=${GIT_REGISTRY}/${BACKEND_IMAGE_NAME}:${BACK_TAG} \\
-                            --namespace k8s-insight-${params.ENV} --create-namespace
+                            --set backend.image=${GIT_REGISTRY}/${BACKEND_IMAGE_NAME}:${BACK_TAG} 
                     """
                 }
                 }
