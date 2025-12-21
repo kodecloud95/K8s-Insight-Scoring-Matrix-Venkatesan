@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: nginx:alpine
+          image: {{ .Values.frontend.image }}
           ports:
             - containerPort: 80
           volumeMounts:
