@@ -6,7 +6,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-deployment
+    app: frontend-deployment
   ports:
     - name: http
       targetPort: 80
@@ -22,7 +22,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: {{ .Release.Name }}-deployment
+    app: frontend-deployment
   ports:
     - name: http
       targetPort: 80
