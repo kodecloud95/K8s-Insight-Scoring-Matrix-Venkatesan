@@ -64,7 +64,7 @@ pipeline{
         }
         stage ('Deploy to Kubernetes'){
             steps {
-                withCredentials([file(credentialsId: 'K8S_CREDENTIAL', variable: 'KUBECONFIG_PATH')]) {
+                withCredentials([file(credentialsId: 'K8S_CREDENTIAL', variable: 'KUBECONFIG')]) {
                 script {
                     def FRONT_TAG = "${env.BUILD_NUMBER}"
                     if (params.FRONTEND_IMAGE_TAG.trim() !=  'latest') {
@@ -75,7 +75,6 @@ pipeline{
                         BACK_TAG = params.BACKEND_IMAGE_TAG.trim()
                     }                
                     sh """
-                        export KUBECONFIG = "${KUBECONFIG_PATH}"
                         # Add your kubectl deployment commands here
                         echo "Deploying to ${params.ENV} environment"
                         helm upgrade --install k8s-insight-${params.ENV} ./k8s-insight-chart \\
