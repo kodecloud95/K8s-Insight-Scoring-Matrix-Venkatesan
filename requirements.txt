@@ -1,0 +1,24 @@
+# --- SYSTEM REQUIREMENTS ---
+1. Operating System: Linux (Ubuntu 22.04 LTS recommended)
+2. Containerization: Docker Engine (v20.10+)
+3. Orchestration: Kubernetes Cluster (v1.24+ / Minikube / Managed K8s)
+4. Package Manager: Helm (v3.0+)
+
+# --- CI/CD ENVIRONMENT ---
+5. Jenkins: Version 2.300+
+   - Required Plugins:
+     * Pipeline
+     * Credentials Binding Plugin
+     * Git Plugin
+     * Docker Pipeline
+     * Kubernetes CLI Plugin
+
+# --- CREDENTIALS (Must be configured in Jenkins) ---
+6. GIT_PACKAGE: (Username/Password) - GitHub Container Registry (GHCR) access.
+7. K8S_CREDENTIAL: (Secret File) - The Kubeconfig file for cluster access.
+8. NGROK_API_KEY: (Secret Text) - API Key from ngrok dashboard.
+9. NGROK_AUTH_KEY: (Secret Text) - Auth Token from ngrok dashboard.
+
+# --- NETWORK ---
+10. Ngrok Account: Free or Paid tier for Ingress tunneling.
+11. Domain: A reserved ngrok domain (as specified in your ingress manifest).
