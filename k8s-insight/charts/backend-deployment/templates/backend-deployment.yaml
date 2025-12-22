@@ -25,25 +25,25 @@ spec:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: mysql-configmap
+                  name: {{ .Values.global.configMap.name }}
                   key: MYSQL_DATABASE
             - name: MYSQL_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: mysql-configmap
+                  name: {{ .Values.global.configMap.name }}
                   key: MYSQL_HOST                  
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.global.secret.name }}
                   key: MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.global.secret.name }}
                   key: MYSQL_PASSWORD
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.global.secret.name }}
                   key: MYSQL_ROOT_PASSWORD

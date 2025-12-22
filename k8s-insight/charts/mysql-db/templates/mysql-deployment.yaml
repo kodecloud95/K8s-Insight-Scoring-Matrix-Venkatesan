@@ -1,51 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql-db
+  name: {{ .Values.name }}
   namespace: {{ .Release.Name }}
   labels:
-    app: database
+    app: {{ .Values.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: database
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app: database
+        app: {{ .Values.name }}
     spec:
       containers:
-        - name: mysql-db
-          image: mysql:8.0
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.container.image }}
           ports:
-            - containerPort: 3306
+            - containerPort: {{ .Values.container.containerPort }}
           env:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: mysql-configmap
+                  name: {{ .Values.global.configMap.name }}
                   key: MYSQL_DATABASE
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.global.secret.name }}
                   key: MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.global.secret.name }}
                   key: MYSQL_PASSWORD
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.global.secret.name }}
                   key: MYSQL_ROOT_PASSWORD
           volumeMounts:
-            - name: sql-init
-              mountPath: /docker-entrypoint-initdb.d
+            - name: {{ .Values.volume.name }}
+              mountPath: {{ .Values.volume.mountPath }}
       volumes:
-        - name: sql-init
+        - name: {{ .Values.volume.name }}
           configMap:
             name: mysql-configmap
             items:

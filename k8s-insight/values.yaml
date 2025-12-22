@@ -2,7 +2,7 @@
 frontend:
   name: frontend-deployment
   # Number of pods to run
-  replicas: 2
+  replicas: 1
 
   ingress:
     # The external URL provided by ngrok
@@ -26,7 +26,7 @@ frontend:
 
 backend-deployment:
   name: backend-deployment
-  replicas: 2
+  replicas: 1
   container:
     # Base image path (Jenkins will override the :tag part)
     image: ghcr.io/kodecloud95/k8s-insight-backend-test
@@ -34,4 +34,26 @@ backend-deployment:
     containerPort: 3000
   service:
     port: 3000
-    targetPort: 3000  
+    targetPort: 3000
+
+mysql-db:
+  name: mysql-db
+  replicas: 1
+  container:
+    image: mysql:8.0
+    containerPort: 3306
+  service:
+    port: 3306
+    targetPort: 3306
+  volume:
+    name: sql-init
+    mountPath: /docker-entrypoint-initdb.d
+
+global:  
+  secret:
+    name: mysql-secret
+  configMap:
+    name: mysql-configmap
+    
+
+  
