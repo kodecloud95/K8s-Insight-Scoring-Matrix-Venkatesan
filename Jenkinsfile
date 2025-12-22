@@ -13,10 +13,10 @@ pipeline{
     }
     stages {
         stage ('Checkout Code') {
-            steps {
-                when {
+            when {
                 expression { (params.ENV.trim() in ["test", "dev", "prod"]) }
-                }  
+            } 
+            steps {
                 script {
                     if (params.ENV == "test") {
                         git branch: 'test', url: 'https://github.com/kodecloud95/K8s-Insight-Scoring-Matrix-Venkatesan.git'
