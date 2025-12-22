@@ -19,7 +19,13 @@ pipeline{
             } 
             steps {
                 script {
-                git branch: ${params.ENV}, url: 'https://github.com/kodecloud95/K8s-Insight-Scoring-Matrix-Venkatesan.git'
+                    if (params.ENV == "test") {
+                        git branch: 'test', url: 'https://github.com/kodecloud95/K8s-Insight-Scoring-Matrix-Venkatesan.git'
+                    } else if (params.ENV == "dev") {
+                        git branch: 'dev', url: 'https://github.com/kodecloud95/K8s-Insight-Scoring-Matrix-Venkatesan.git'
+                    } else if (params.ENV == "prod") {
+                        git branch: 'prod', url: 'https://github.com/kodecloud95/K8s-Insight-Scoring-Matrix-Venkatesan.git'
+                    }
                 }
             }
         }
