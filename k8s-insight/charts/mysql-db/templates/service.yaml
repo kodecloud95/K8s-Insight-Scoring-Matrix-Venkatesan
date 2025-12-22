@@ -6,9 +6,9 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: database
+    app: {{ .Values.name }}
   clusterIP: 10.103.73.51
   ports:
     - name: mysql
-      port: 3306
-      targetPort: 3306
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}

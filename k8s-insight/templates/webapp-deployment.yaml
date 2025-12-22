@@ -1,31 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-deployment
+  name: {{ .Values.frontend.name }}
   namespace: {{ .Release.Name }}
   labels:
-    app: {{ .Release.Name }}-deployment
+    app: {{ .Values.frontend.name }}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-deployment
+      app: {{ .Values.frontend.name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-deployment
+        app: {{ .Values.frontend.name }}
     spec:
       containers:
-        - name: {{ .Release.Name }}
-          image: nginx:alpine
+        - name: {{ .Values.frontend.name }}
+          image: {{ .Values.frontend.container.image }}
           ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: {{ .Release.Name }}-volume
-              mountPath: /usr/share/nginx/html
-      volumes:
-        - name: {{ .Release.Name }}-volume
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-pvc
-            
-               
+            - containerPort: {{ .Values.frontend.container.containerPort }} 

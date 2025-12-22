@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mysql-configmap
+  name: {{ .Values.global.configMap.name }}
   namespace: {{ .Release.Name }}
 data:
   MYSQL_DATABASE: quiz_results
