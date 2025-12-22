@@ -64,6 +64,9 @@ pipeline{
             }
         }
         stage ('Deploy Ngrok Ingress Controller'){
+            when {
+                expression { params.ACTION == "DEPLOY" || params.ACTION == "UPDATE" }
+            }
             steps {
                 withCredentials([file(credentialsId: 'K8S_CREDENTIAL', variable: 'KUBECONFIG'),
                 string(credentialsID: 'NGROK_API_KEY', variable: 'NGROK_API_KEY'),
@@ -79,6 +82,9 @@ pipeline{
             }
         }
         stage ('Deploy to Kubernetes'){
+            when {
+                expression { params.ACTION == "DEPLOY" || params.ACTION == "UPDATE" }
+            }
             steps {
                 withCredentials([file(credentialsId: 'K8S_CREDENTIAL', variable: 'KUBECONFIG')]) {
                 script {
@@ -90,7 +96,6 @@ pipeline{
                     if (params.BACKEND_IMAGE_TAG.trim() !=  'latest') {
                         BACK_TAG = params.BACKEND_IMAGE_TAG.trim()
                     }
-                    if (params.ACTION == "DEPLOY" || params.ACTION == "UPDATE") {
                     sh """
                         # Add your kubectl deployment commands here
                         echo "Deploying to ${params.ENV} environment with Frontend Image Tag: ${FRONT_TAG} and Backend Image Tag: ${BACK_TAG}"
@@ -98,21 +103,28 @@ pipeline{
                             --set frontend.container.image=${GIT_REGISTRY}/${FRONTEND_IMAGE_NAME}:${FRONT_TAG} \\
                             --set backend-deployment.container.image=${GIT_REGISTRY}/${BACKEND_IMAGE_NAME}:${BACK_TAG} 
                         
-                    """
+                    """               
                     }
-                    else if (params.ACTION == "DELETE") {                
-                    sh """
+                }
+            }
+        }
+        stage ('Deployment Cleanup') {
+            when {
+                expression { params.ACTION == "DELETE" }
+            }
+            steps {
+                   sh """
                         # Add your kubectl deployment commands here
-                        echo "Deleting Frontend Image Tag: ${FRONT_TAG} and Backend Image Tag: ${BACK_TAG} in ${params.ENV} environment "
+                        echo "Deleting helm k8s-insight-${params.ENV} in ${params.ENV} environment "
 
                         kubectl patch ingress ngrok-ingress -n k8s-insight-${params.ENV} --type merge -p '{"metadata":{"finalizers":null}}'
                         kubectl patch domain dianna-beholdable-larissa-ngrok-free-dev -n k8s-insight-${params.ENV} --type merge -p '{"metadata":{"finalizers":null}}';
                         
                         helm uninstall k8s-insight-${params.ENV}
+                        helm uninstall ngrok-operator
+
+                        echo "Cleanup completed."
                     """
-                    }
-                }
-                }
             }
         }
     }
