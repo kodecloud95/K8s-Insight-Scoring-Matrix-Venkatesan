@@ -75,7 +75,7 @@ pipeline{
                     if (params.BACKEND_IMAGE_TAG.trim() !=  'latest') {
                         BACK_TAG = params.BACKEND_IMAGE_TAG.trim()
                     }
-                    if (params.ACTION == "DEOPLY" || params.ACTION == "UPDATE") {
+                    if (params.ACTION == "DEPLOY" || params.ACTION == "UPDATE") {
                     sh """
                         # Add your kubectl deployment commands here
                         echo "Deploying to ${params.ENV} environment with Frontend Image Tag: ${FRONT_TAG} and Backend Image Tag: ${BACK_TAG}"
