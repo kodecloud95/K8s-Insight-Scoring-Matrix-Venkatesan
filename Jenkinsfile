@@ -8,7 +8,7 @@ pipeline{
         string(name: 'BACKEND_IMAGE_TAG', defaultValue: 'latest', description: 'Backend Docker image tag')
     }
     environment {
-        GIT_REGISTRY = 'ghcr.io/kodecloud95'
+        GIT_REGISTRY = 'ghcr.io/venkatesan-labs'
         FRONTEND_IMAGE_NAME = "k8s-insight-frontend-${params.ENV}"
         BACKEND_IMAGE_NAME = "k8s-insight-backend-${params.ENV}"
         }
@@ -19,7 +19,7 @@ pipeline{
             } 
             steps {
                 script {
-                    git branch: 'test', url: 'https://github.com/kodecloud95/K8s-Insight-Scoring-Matrix-Venkatesan.git'
+                    git branch: 'test', url: 'https://github.com/venkatesan-labs/K8s-Insight-Scoring-Matrix.git'
                 }
             }
         }
