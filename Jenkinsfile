@@ -19,7 +19,7 @@ pipeline{
             } 
             steps {
                 script {
-                    git branch: 'test', url: 'https://github.com/venkatesan-labs/K8s-Insight-Scoring-Matrix.git'
+                    git branch: 'main', url: 'https://github.com/venkatesan-labs/K8s-Insight-Scoring-Matrix.git'
                 }
             }
         }
